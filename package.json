@@ -1,0 +1,21 @@
+{
+
+    "name": "cfautoload",
+    "version": "0.8.0",
+    "description": "Javascript asset autoloader",
+    "main": "./build.sh",
+
+    "repository": {
+        "type": "git",
+        "private": true,
+        "url": "https://github.com/chuckfairy/cfautoload.git"
+    },
+
+    "dependencies": {
+        "cfcompile": "https://github.com/chuckfairy/cfcompile"
+    },
+
+    "author": "chuckfairy <charlieabeling@gmail.com>",
+    "license": "MIT"
+
+}
