@@ -2,7 +2,7 @@
 
     "type": "javascript",
 
-    "header": "//CFAutoload javascript asset loader by chuckfairy <charlieabeling@gmail.com>\n"
+    "header": "//CFAutoload javascript asset loader by chuckfairy <charlieabeling@gmail.com>\n",
 
     "compile": [
         "lib/async.min.js", "src/CFAutoload.js"
