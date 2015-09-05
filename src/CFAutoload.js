@@ -10,7 +10,7 @@ function CFAutoload( src, options ) {
 
     scope.setSource( src );
 
-    scope.loadByType( options );
+    scope.loadByType( src, options );
 
 };
 
@@ -67,6 +67,16 @@ CFAutoload.prototype = {
 
     createXHR: function() {
 
+        try { return new XMLHttpRequest(); }
+        catch( e ) {}
+        try { return new ActiveXObject( 'Msxml2.XMLHTTP.6.0' ); }
+        catch (e) {}
+        try { return new ActiveXObject( 'Msxml2.XMLHTTP.3.0' ); }
+        catch (e) {}
+        try { return new ActiveXObject( 'Microsoft.XMLHTTP' ); }
+        catch (e) {}
+        return false;
+
     },
 
 
@@ -82,15 +92,36 @@ CFAutoload.prototype = {
             if( !!async ) {
 
                 script.async = true;
-                callback(); 
+                callback( 0, Date.now() ); 
 
             } else {
 
-                script.onload = callback;
+                script.onload = function() {
+                    callback( 0, Date.now() );
+                };
 
             }
 
             document.body.appendChild( script );
+
+        }
+
+    },
+
+
+    //Create ajax get load function
+
+    createAjaxLoad: function( src, options ) {
+
+        return function( callback ) {
+
+            var xhr = scope.createXHR();
+
+            if( !xhr ) {
+
+                throw new Error( "Browser does not support Ajax" );
+
+            }
 
         }
 
@@ -142,7 +173,7 @@ CFAutoload.prototype = {
 
         var scope = this;
 
-        var src = src || [];
+        var src = scope.src = src || [];
 
         var options = options || {};
 
@@ -150,11 +181,11 @@ CFAutoload.prototype = {
 
         var ol = src.length|0;
 
-        scope.src = src;
+        var loadFunc = options.useEval ? scope.createAjaxLoad : scope.createScriptLoad;
 
         for( var i = 0; i < ol; i ++ ) {
 
-            loadMethods.push( scope.createScriptLoad( src[ i ] ), options.async );
+            loadMethods.push( loadFunc( src[ i ], !!options.async ) );
 
         }
 
@@ -174,6 +205,7 @@ CFAutoload.Defaults = {
     useEval: false,
     fallbackEval: true,
     ajaxLoad: false,
+    loadKey: "compile",
 
 
     //Callback
@@ -197,6 +229,30 @@ CFAutoload.isNode =  (function() {
 CFAutoload.load = function( src, options, callback ) {
 
     return new CFAutoload( src, options, callback );
+
+};
+
+
+//Node require objects
+
+CFAutoload.require = function( src, options ) {
+
+    if( !Array.isArray( src ) ) {
+
+        throw new Error( "Argument 1 requires array to load to modules" );
+
+    }
+
+    var output = {};
+
+    var srcLength = src.length;
+
+    for( var i = 0; i < srcLength; i ++ ) {
+
+        var moduleString = src[ i ];
+        output[ mouduleString ] = require( moduleString );
+
+    }
 
 };
 
