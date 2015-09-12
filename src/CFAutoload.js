@@ -65,7 +65,7 @@ CFAutoload.prototype = {
 
     //Create AJAX request object
 
-    createXHR: function() {
+    createRequest: function() {
 
         try { return new XMLHttpRequest(); }
         catch( e ) {}
@@ -156,11 +156,11 @@ CFAutoload.prototype = {
 
         var scope = this;
 
-        scope.loadJSON( url, function( responseText ) {
+        scope.loadJSON( url, function( response ) {
 
-            scope.src = JSON.parse( responseText ) || [];
+            scope.src = response;
 
-            scope.loadByObject( options, callback );
+            scope.loadByObject( scope.src, options, callback );
 
         });
 
@@ -190,6 +190,42 @@ CFAutoload.prototype = {
         }
 
         async.series( loadMethods, callback );
+
+    },
+
+
+    //JSON load config file
+
+    loadJSON: function( url, callback ) {
+
+        var scope = this;
+
+        var request = scope.createRequest();
+
+    	request.open( "GET", url, true );
+    	request.setRequestHeader("Content-Type", "application/json");
+
+    	request.onreadystatechange = function() {
+
+    		if(request.readyState === 4 && request.status===200) {
+
+                var jsonResponse = JSON.parse( this.responseText );
+
+                if( ! ( jsonResponse instanceof Array ) ) {
+
+                    jsonResponse = jsonResponse[ scope.loadKey ] || [];
+
+                }
+
+                console.dir( jsonResponse );
+
+    			callback( jsonResponse );
+
+    		}
+
+    	};
+        
+    	request.send();
 
     }
 
