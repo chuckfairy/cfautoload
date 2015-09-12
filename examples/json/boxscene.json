@@ -1,1 +1,1 @@
-[ "js/three.min.js", "js/boxscene.js" ]
+{ "compile": [ "js/three.min.js", "js/boxscene.js" ] }

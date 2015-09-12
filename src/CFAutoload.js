@@ -130,16 +130,16 @@ CFAutoload.prototype = {
 
     //Load by src type
 
-    loadByType: function( options ) {
+    loadByType: function( src, options, callback ) {
 
         switch( this.srcType ) {
 
             case "string":
-                this.loadByURL( options );
+                this.loadByURL( src, options, callback );
                 break;
 
             case "object":
-                this.loadByObject( options );
+                this.loadByObject( src, options, callback );
                 break;
 
             default:
@@ -156,7 +156,11 @@ CFAutoload.prototype = {
 
         var scope = this;
 
-        scope.loadJSON( url, function( response ) {
+        var options = typeof( options ) === "object" ? options : {};
+
+        options.loadKey = options.loadKey || CFAutoload.defaults.loadKey;
+
+        scope.loadJSON( url, options, function( response ) {
 
             scope.src = response;
 
@@ -196,36 +200,38 @@ CFAutoload.prototype = {
 
     //JSON load config file
 
-    loadJSON: function( url, callback ) {
+    loadJSON: function( url, options, callback ) {
 
         var scope = this;
 
         var request = scope.createRequest();
 
-    	request.open( "GET", url, true );
-    	request.setRequestHeader("Content-Type", "application/json");
+        request.open( "GET", url, true );
 
-    	request.onreadystatechange = function() {
+        request.setRequestHeader("Content-Type", "application/json");
 
-    		if(request.readyState === 4 && request.status===200) {
+        request.onreadystatechange = function() {
+
+            if(request.readyState === 4 && request.status===200) {
 
                 var jsonResponse = JSON.parse( this.responseText );
 
+                console.dir( jsonResponse );
+
                 if( ! ( jsonResponse instanceof Array ) ) {
 
-                    jsonResponse = jsonResponse[ scope.loadKey ] || [];
+                    console.log( "SDF" );
+                    jsonResponse = jsonResponse[ options.loadKey ] || [];
 
                 }
 
-                console.dir( jsonResponse );
+                callback( jsonResponse );
 
-    			callback( jsonResponse );
+            }
 
-    		}
+        };
 
-    	};
-        
-    	request.send();
+        request.send();
 
     }
 
