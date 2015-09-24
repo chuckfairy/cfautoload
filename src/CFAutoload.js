@@ -179,7 +179,7 @@ CFAutoload.prototype = {
 
         var src = scope.src = src || [];
 
-        var options = options || {};
+        var options = options || CFAutoload.defaults;
 
         var loadMethods = []; 
 
@@ -187,9 +187,13 @@ CFAutoload.prototype = {
 
         var loadFunc = options.useEval ? scope.createAjaxLoad : scope.createScriptLoad;
 
+        var prefix = options.srcPrefix || CFAutoload.defaults.srcPrefix;
+
         for( var i = 0; i < ol; i ++ ) {
 
-            loadMethods.push( loadFunc( src[ i ], !!options.async ) );
+            var url = prefix + "/" + src[ i ];
+
+            loadMethods.push( loadFunc( url, !!options.async ) );
 
         }
 
@@ -216,11 +220,8 @@ CFAutoload.prototype = {
 
                 var jsonResponse = JSON.parse( this.responseText );
 
-                console.dir( jsonResponse );
-
                 if( ! ( jsonResponse instanceof Array ) ) {
 
-                    console.log( "SDF" );
                     jsonResponse = jsonResponse[ options.loadKey ] || [];
 
                 }
@@ -248,7 +249,7 @@ CFAutoload.Defaults = {
     fallbackEval: true,
     ajaxLoad: false,
     loadKey: "compile",
-
+    srcPrefix: "",
 
     //Callback
     onLoad: null,
