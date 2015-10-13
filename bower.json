@@ -1,0 +1,26 @@
+{
+  "name": "cfautoload",
+  "version": "1.0.0",
+  "homepage": "https://github.com/chuckfairy/cfautoload",
+  "authors": [
+    "Charles Abeling <charlieabeling@gmail.com>"
+  ],
+  "description": "javascript autoloader",
+  "main": "build/cfautoload.min.js",
+  "moduleType": [],
+  "keywords": [
+    "javascript",
+    "autoloader",
+    "cfautoloader",
+    "cf",
+    "chuckfairy"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

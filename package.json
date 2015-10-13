@@ -3,7 +3,7 @@
     "name": "cfautoload",
     "version": "0.8.0",
     "description": "Javascript asset autoloader",
-    "main": "./build.sh",
+    "main": "./build.js",
 
     "repository": {
         "type": "git",
