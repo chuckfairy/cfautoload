@@ -158,7 +158,7 @@ CFAutoload.prototype = {
 
         var options = typeof( options ) === "object" ? options : {};
 
-        options.loadKey = options.loadKey || CFAutoload.defaults.loadKey;
+        options.loadKey = options.loadKey || CFAutoload.Defaults.loadKey;
 
         scope.loadJSON( url, options, function( response ) {
 
@@ -179,7 +179,7 @@ CFAutoload.prototype = {
 
         var src = scope.src = src || [];
 
-        var options = options || CFAutoload.defaults;
+        var options = options || CFAutoload.Defaults;
 
         var loadMethods = []; 
 
@@ -187,7 +187,7 @@ CFAutoload.prototype = {
 
         var loadFunc = options.useEval ? scope.createAjaxLoad : scope.createScriptLoad;
 
-        var prefix = options.srcPrefix || CFAutoload.defaults.srcPrefix;
+        var prefix = options.srcPrefix || CFAutoload.Defaults.srcPrefix;
 
         for( var i = 0; i < ol; i ++ ) {
 
